@@ -1,0 +1,65 @@
+Dim StudentNumber As Single = 0
+    Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+
+        Dim intColum0Width As Integer
+        intColum0Width = Me.Width - frmScore.Columns(1).Width - frmScore.Columns(2).Width - 12
+        If intColum0Width > 0 Then
+            frmScore.Columns(0).Width = intColum0Width
+        End If
+    End Sub
+
+    Private Sub btnEnterStudent_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnEnterStudent.Click
+
+        Dim objAddItemForm As New Enter_Data
+        objAddItemForm.ShowDialog()
+        Do Until objAddItemForm.tbStudentName.Text = ""
+            Dim LvlTodaysSales As New ListViewItem(objAddItemForm.tbStudentName.Text)
+
+            StudentNumber = 1 + StudentNumber
+            LvlTodaysSales.SubItems.Add((objAddItemForm.nudTestScore.Value))
+            frmScore.Items.Add(LvlTodaysSales)
+            objAddItemForm.ShowDialog()
+
+
+        Loop
+
+
+
+
+    End Sub
+    Private Sub lstTodaysSales_KeyDown(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyEventArgs) Handles frmScore.KeyDown
+        If e.KeyCode = Keys.Delete And frmScore.SelectedIndices.Count > 0 Then
+            frmScore.Items.RemoveAt(frmScore.SelectedIndices(0))
+
+        End If
+    End Sub
+
+    Private Sub btnDisplayData_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnDisplayData.Click
+        Dim intIndex, intListCount As Integer
+        Dim sngTotalScore As Double = 0
+        Dim sngScore As Double = 0
+        Dim sngScoreAverage As Single
+        Dim strResults As String, strScore As String
+
+        intListCount = Convert.ToInt32(frmScore.Items.Count)
+        For intIndex = 0 To intListCount - 1
+            strScore = frmScore.Items(intIndex).SubItems(1).Text
+            sngScore = Convert.ToString(strScore)
+            sngTotalScore += strScore
+            sngScoreAverage = (sngTotalScore / StudentNumber)
+
+        Next
+        strResults = "Total Students: " & (StudentNumber) & ControlChars.NewLine
+        strResults &= "Total Average Score: " & Format$((sngScoreAverage / 100), "P") & ControlChars.NewLine
+        MessageBox.Show(strResults, "Score Totals")
+    End Sub
+
+    Private Sub btnClear_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnClear.Click
+        frmScore.Items.Clear()
+
+    End Sub
+
+    Private Sub frmScore_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles frmScore.SelectedIndexChanged
+
+    End Sub
+End Class
